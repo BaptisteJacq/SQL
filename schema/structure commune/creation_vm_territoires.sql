@@ -33,7 +33,7 @@ SELECT
     WHERE
         d.libelle = 'Territoire'
         AND sysdate BETWEEN b.debut_validite AND b.fin_validite
-GROUP BY e.nom, c.objectid
+GROUP BY e.nom, c.objectid, g.code
 ;
 
 -- 2. Création des métadonnées spatiales
