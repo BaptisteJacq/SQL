@@ -29,12 +29,12 @@ FROM
     INNER JOIN g_geo.ta_libelle d ON c.fid_libelle = d.objectid
     INNER JOIN g_geo.ta_nom e ON c.fid_nom = e.objectid
     INNER JOIN g_geo.ta_identifiant_zone_administrative f ON c.objectid = f.fid_zone_administrative
-    INNER JOIN g_geo.ta_code g ON f.fid_code = g.objectid
+    INNER JOIN g_geo.ta_code g ON f.fid_identifiant = g.objectid
 WHERE
     d.libelle = 'Unité Territoriale'
     AND b.debut_validite = '01/01/2017'
     AND b.fin_validite = '31/12/2019'
-GROUP BY e.nom, c.objectid
+GROUP BY e.nom, c.objectid, g.code
 ;
 
 -- 2. Création des métadonnées spatiales
