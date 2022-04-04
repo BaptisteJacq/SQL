@@ -2,7 +2,9 @@
 Création de la vue VM_STAT_DOSSIER_PAR_COMMUNE regroupant les informations des dossiers de levés nécessaires à leur gestion par les géomètres et les photo-interprètes.
 */
 CREATE MATERIALIZED VIEW G_GESTIONGEO.VM_STAT_DOSSIER_PAR_COMMUNE("OBJECTID", "CODE_INSEE", "COMMUNE", "ETAT", "NOMBRE_DOSSIER", "GEOM")
-REFRESH ON DEMAND
+REFRESH
+START WITH TRUNC(sysdate)+19/24
+NEXT TRUNC(sysdate)+43/24
 FORCE
 DISABLE QUERY REWRITE AS
   WITH
@@ -62,13 +64,17 @@ PARAMETERS(
   work_tablespace=DATA_TEMP'
 );
 
+-- 5. Création des commentaires
 COMMENT ON COLUMN "G_GESTIONGEO"."VM_STAT_DOSSIER_PAR_COMMUNE"."OBJECTID" IS 'Clé primaire de la VM.';
 COMMENT ON COLUMN "G_GESTIONGEO"."VM_STAT_DOSSIER_PAR_COMMUNE"."CODE_INSEE" IS 'Code INSEE de la commune';
 COMMENT ON COLUMN "G_GESTIONGEO"."VM_STAT_DOSSIER_PAR_COMMUNE"."COMMUNE" IS 'Nom de la commune';
 COMMENT ON COLUMN "G_GESTIONGEO"."VM_STAT_DOSSIER_PAR_COMMUNE"."ETAT" IS 'Etats d''avancement des dossiers.';
 COMMENT ON COLUMN "G_GESTIONGEO"."VM_STAT_DOSSIER_PAR_COMMUNE"."NOMBRE_DOSSIER" IS 'Nombre de dossiers créés par état et commune.';
 COMMENT ON COLUMN "G_GESTIONGEO"."VM_STAT_DOSSIER_PAR_COMMUNE"."GEOM" IS 'Champ géométrique du centroïde de la commune.';
-COMMENT ON MATERIALIZED VIEW "G_GESTIONGEO"."VM_STAT_DOSSIER_PAR_COMMUNE"  IS 'Vue matérialisée statistique comptant le nombre de dossiers créés par état et commune.';
+COMMENT ON MATERIALIZED VIEW "G_GESTIONGEO"."VM_STAT_DOSSIER_PAR_COMMUNE"  IS 'Vue matérialisée statistique comptant le nombre de dossiers créés par état et commune. Cette VM est mise à jour tous les jours à 19h00.';
+
+-- 6. Création des droits de lecture
+GRANT SELECT ON G_GESTIONGEO.VM_STAT_DOSSIER_PAR_COMMUNE TO G_ADMIN_SIG;
 
 /
 
